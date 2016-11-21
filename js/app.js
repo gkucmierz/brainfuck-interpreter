@@ -23,9 +23,16 @@ http://www.hevanet.com/cristofd/brainfuck/]
     height: 'auto'
   };
 
+  let worker = new Worker('dist/workers/worker.js');
+  // worker.terminate();
+
+  worker.onmessage = (msg) => {
+    $scope.$apply(() => $scope.ref.output = msg.data);
+  };
+
   $scope.run = function() {
-    let compiled = brainfuckCompiler.compile($scope.ref.code);
-    $scope.ref.output = compiled.run($scope.ref.input);
+    $scope.ref.output = 'Loading...';
+    worker.postMessage([$scope.ref.code, $scope.ref.input]);
   };
   
   $scope.clean = function() {

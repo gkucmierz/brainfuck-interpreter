@@ -1,0 +1,14 @@
+[
+  "node_modules/angular/angular.min.js",
+  "bower_components/jquery/dist/jquery.min.js",
+
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  "node_modules/bootstrap/dist/js/bootstrap.min.js",
+
+  "bower_components/angular-ui-codemirror/ui-codemirror.min.js",
+  "bower_components/codemirror/lib/codemirror.css",
+  "bower_components/codemirror/theme/monokai.css",
+  "bower_components/codemirror/lib/codemirror.js",
+  
+  "node_modules/brainfuck-compiler/lib/brainfuck.js"
+]

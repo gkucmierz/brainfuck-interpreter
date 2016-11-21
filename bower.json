@@ -15,6 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "angular-ui-codemirror": "^0.3.0"
+    "angular-ui-codemirror": "^0.3.0",
+    "angular-jquery": "^0.2.1"
   }
 }

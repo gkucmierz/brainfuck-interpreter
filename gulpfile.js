@@ -24,7 +24,7 @@ gulp.task('clean', () => {
 })
 
 gulp.task('build', () => {
-  return gulp.src(['js/**/*.js'])
+  gulp.src(['js/**/*.js'])
     .pipe(sourcemaps.init())
     .pipe(babel({presets: ['es2015']}))
     // .pipe(babel({presets: ['es2015']}))
@@ -36,12 +36,18 @@ gulp.task('build', () => {
 });
 
 gulp.task('vendor', () => {
-  let vendorFiles = JSON.parse(fs.readFileSync('bundlefile.json'))
-    .filter(file => file.match(/\.js$/));
-  return gulp.src(vendorFiles)
+  let vendorFiles = JSON.parse(fs.readFileSync('bundlefile.json'));
+  let js = file => file.match(/\.js$/);
+  let css = file => file.match(/\.css$/);
+
+  gulp.src(vendorFiles.filter(js))
     .pipe(wrap('(function(){"use strict";<%= contents %>\n})();'))
     .pipe(uglify({compress: {}}))
     .pipe(concat('vendor.js'))
+    .pipe(gulp.dest('dist'));
+
+  gulp.src(vendorFiles.filter(css))
+    .pipe(concat('vendor.css'))
     .pipe(gulp.dest('dist'));
 });
 

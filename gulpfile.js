@@ -26,7 +26,7 @@ gulp.task('clean', () => {
     .pipe(clean());
 })
 
-gulp.task('build', () => {
+gulp.task('quick-build', () => {
   gulp.src(['js/**/*.js'])
     .pipe(sourcemaps.init())
     .pipe(babel({presets: ['es2015']}))
@@ -42,6 +42,10 @@ gulp.task('build', () => {
     .pipe(uglify())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist/workers'));
+
+  fs.writeFileSync('dist/examples.json', JSON.stringify(
+    fs.readdirSync('examples')
+  ));
 });
 
 gulp.task('vendor', () => {
@@ -72,11 +76,13 @@ gulp.task('watch', () => {
       'package.json',
       'bundlefile.json',
       'js/**/*.js',
-      'js-workers/**/*.js'
+      'js-workers/**/*.js',
+      'examples/*.bf'
     ],
-    ['jshint', 'build']
+    ['jshint', 'quick-build']
   );
 });
 
-gulp.task('default', runSequence('clean', ['watch', 'build', 'vendor']));
+gulp.task('default', runSequence('clean', ['watch', 'vendor']));
+gulp.task('build', runSequence('clean', ['quick-build', 'vendor']));
 

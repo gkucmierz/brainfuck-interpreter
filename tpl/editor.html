@@ -1,4 +1,22 @@
 
+
+<div class="row">
+  <div class="col-lg-6">
+    <div ng-include="'tpl/header.html'"></div>
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="input-group">
+      <select ng-options="example as example.name for example in ref.examples"
+              ng-model="ref.example"
+              class="form-control"></select>
+      <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary" ng-click="load()">Load</button>
+      </span>
+    </div>
+  </div>
+</div>
+
 <div ui-codemirror ui-codemirror-opts="editorOptions" ng-model="ref.code"></div>
 
 

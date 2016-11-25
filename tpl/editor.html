@@ -19,7 +19,6 @@
 
 <div ui-codemirror ui-codemirror-opts="editorOptions" ng-model="ref.code"></div>
 
-
 <!--       <input type="text" class="form-control" ng-model="ref.input" />
 
     <div class="input-group pull-right">
@@ -28,19 +27,21 @@
     </div>
  -->
 
-
 <div class="input-group">
   <input type="text" class="form-control" placeholder="Input" ng-model="ref.input">
   <span class="input-group-btn">
     <button type="button" class="btn btn-danger" ng-click="clean()">Clean</button>
-    <button type="submit" class="btn btn-success" ng-click="run()">Run</button>
+    <button type="submit" class="btn btn-success" ng-click="run()" ng-disabled="ref.processing">Run</button>
   </span>
 </div>
 
 
 <div class="row">
   <div class="col-lg-12">
-    <label>Output</label>
+    <label>
+      Output
+      <span ng-show=" "> (processing…)</span>
+    </label>
     <pre>{{ref.output}}</pre>
   </div>
 </div>

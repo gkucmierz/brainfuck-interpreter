@@ -3,9 +3,10 @@ angular.module('bi', [
   'ui.codemirror'
 ])
 
-.controller('mainCtrl', ['$scope', '$http', ($scope, $http) => {
+.controller('mainCtrl', ['$scope', '$http', '$timeout', ($scope, $http, $timeout) => {
   $scope.ref = {
-    code: ``
+    code: ``,
+    processing: false
   };
   $scope.editorOptions = {
     lineNumbers: true,
@@ -28,16 +29,35 @@ angular.module('bi', [
     });
   };
 
-  let worker = new Worker('dist/workers/worker.js');
-  // worker.terminate();
-
-  worker.onmessage = (msg) => {
-    $scope.$apply(() => $scope.ref.output = msg.data);
-  };
-
   $scope.run = function() {
-    $scope.ref.output = 'Loading...';
+    $scope.ref.processing = true;
+    $scope.ref.output = '';
+
+    let worker = new Worker('dist/workers/worker.js');
+
     worker.postMessage([$scope.ref.code, $scope.ref.input]);
+
+    let output = [];
+    let timeout;
+    (function loop() {
+      $scope.ref.output = output.join('');
+      timeout = $timeout(loop, 200);
+    }());
+
+    worker.onmessage = (msg) => {
+      let [type, data] = msg.data.split(',');
+
+      if (type === 'data') {
+        output.push(data);
+      } else if (type === 'end') {
+        $scope.$apply(() => {
+          $scope.ref.processing = false;
+          $scope.ref.output = output.join('');
+        });
+        $timeout.cancel(timeout);
+        worker.terminate();
+      }
+    };
   };
   
   $scope.clean = function() {

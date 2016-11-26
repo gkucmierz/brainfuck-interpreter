@@ -27,11 +27,14 @@ gulp.task('clean', () => {
 })
 
 gulp.task('quick-build', () => {
+  gulp.src(['css/**/*.css'])
+    .pipe(concat('app.css'))
+    .pipe(gulp.dest('dist'));
+
   gulp.src(['js/**/*.js'])
     .pipe(sourcemaps.init())
     .pipe(babel({presets: ['es2015']}))
     .pipe(uglify())
-    // .pipe(wrap('(function(){"use strict";<%= contents %>\n})();'))
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('dist'));
@@ -75,6 +78,7 @@ gulp.task('watch', () => {
       'bower.json',
       'package.json',
       'bundlefile.json',
+      'css/**/*.css',
       'js/**/*.js',
       'js-workers/**/*.js',
       'examples/*.bf'

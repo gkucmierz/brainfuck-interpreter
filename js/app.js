@@ -1,12 +1,18 @@
 
 angular.module('bi', [
-  'ui.codemirror'
+  'ui.codemirror',
+  'ui.bootstrap'
 ])
 
 .controller('mainCtrl', ['$scope', '$http', '$timeout', ($scope, $http, $timeout) => {
   $scope.ref = {
     code: ``,
-    processing: false
+    processing: false,
+    outputType: 'string',
+    output: {
+      string: '',
+      hex: ''
+    }
   };
   $scope.editorOptions = {
     lineNumbers: true,
@@ -29,9 +35,18 @@ angular.module('bi', [
     });
   };
 
+  const dec2hex = (n, p = 2) => {
+    return ('0'.repeat(p) + n.toString(16)).slice(-p);
+  };
+
+  const displayOutput = (arr) => {
+    $scope.ref.output.string = arr.map(n => String.fromCharCode(n)).join('');
+    $scope.ref.output.hex = arr.map(n => dec2hex(n)).join(' ');
+  };
+
   $scope.run = function() {
     $scope.ref.processing = true;
-    $scope.ref.output = '';
+    displayOutput([]);
 
     let worker = new Worker('dist/workers/worker.js');
 
@@ -40,7 +55,7 @@ angular.module('bi', [
     let output = [];
     let timeout;
     (function loop() {
-      $scope.ref.output = output.join('');
+      displayOutput(output);
       timeout = $timeout(loop, 200);
     }());
 
@@ -48,11 +63,11 @@ angular.module('bi', [
       let [type, data] = msg.data.split(',');
 
       if (type === 'data') {
-        output.push(data);
+        output.push(+data);
       } else if (type === 'end') {
         $scope.$apply(() => {
           $scope.ref.processing = false;
-          $scope.ref.output = output.join('');
+          displayOutput(output);
         });
         $timeout.cancel(timeout);
         worker.terminate();
@@ -62,7 +77,7 @@ angular.module('bi', [
   
   $scope.clean = function() {
     $scope.ref.input = '';
-    $scope.ref.output = '';
+    displayOutput([]);
   };
 
 }])

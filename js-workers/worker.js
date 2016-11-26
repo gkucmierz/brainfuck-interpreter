@@ -5,8 +5,8 @@ onmessage = (msg) => {
   let [code, input] = msg.data;
   let compiled = brainfuckCompiler.compile(code);
 
-  compiled.run(input, (n, char) => {
-    postMessage(['data', char].join(','));
+  compiled.run(input, num => {
+    postMessage(['data', num].join(','));
   });
 
   postMessage('end');

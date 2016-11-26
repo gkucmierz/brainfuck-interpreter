@@ -28,11 +28,21 @@
 
 
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-lg-6">
     <label>
       Output
       <span ng-show="ref.processing"> (processing…)</span>
     </label>
-    <pre>{{ref.output}}</pre>
+  </div>
+  <div class="col-lg-6">
+
+    <div class="btn-group pull-right">
+      <label class="btn btn-primary" ng-model="ref.outputType" uib-btn-radio="'string'" >String</label>
+      <label class="btn btn-primary" ng-model="ref.outputType" uib-btn-radio="'hex'">Hex</label>
+    </div>
+
+  </div>
+  <div class="col-lg-12">
+    <pre ng-class="{'pre-wrap':ref.outputType==='hex'}">{{ref.output[ref.outputType]}}</pre>
   </div>
 </div>
